@@ -1,0 +1,12 @@
+{
+	"name": "packet-1",
+	"ver": "1.10",
+	"targets": [
+		{"path": "./archive_this1/*.txt"},
+		{"path": "./archive_this2/*.txt"}
+	],
+	"packets": [
+		{ "name": "packet-2", "ver": "1.10" },
+		{ "name": "packet-3", "ver": "1.10" }
+	]
+}
