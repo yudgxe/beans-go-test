@@ -72,6 +72,27 @@ func Create(sc *sftp.Client, packet model.Create) error {
 	return nil
 }
 
+// GetAllDeps возвращает зависимости пакета, включая зависимости зависимых пакетов.
+func GetAllDeps(sc *sftp.Client, remotePath, name string) ([]model.Packet, []error) {
+	errResp := make([]error, 0)
+	deps, err := getDeps(sc, remotePath, name)
+	if err != nil {
+		errResp = append(errResp, err)
+		return nil, errResp
+	}
+
+	for _, dep := range deps {
+		d, err := getDeps(sc, sc.Join(dep.Name, dep.Version), name)
+		if err != nil {
+			errResp = append(errResp, err)
+		} else {
+			deps = append(deps, d...)
+		}
+	}
+
+	return deps, errResp
+}
+
 // Update скачивает необходиые пакеты и распаковывает их.
 // Если версия не указана будет скачан пакет с самой новой версией.
 func Update(sc *sftp.Client, packages model.Update) error {
@@ -103,10 +124,9 @@ func Update(sc *sftp.Client, packages model.Update) error {
 			continue
 		}
 
-		deps, err := getDeps(sc, remotePath, DependenciesName)
-		if err != nil {
-			uerr.Errs = append(uerr.Errs, err)
-			continue
+		deps, errs := GetAllDeps(sc, remotePath, DependenciesName);
+		if len(errs) > 0 {
+			uerr.Errs = append(uerr.Errs,  errs...)
 		}
 
 		for _, deps := range deps {
