@@ -2,6 +2,8 @@
 	"packages": [
 	 {"name": "packet-1", "ver": "1.11"},
 	 {"name": "packet-4", "ver": "1.20"},
-	 {"name": "packet-5", "ver": "1.10"}
+	 {"name": "packet-5", "ver": "1.10"},
+	 {"name": "packet-7", "ver": "1.10"},
+	 {"name": "packet-6", "ver": "1.12"}
 	]
 }
